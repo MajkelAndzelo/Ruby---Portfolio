@@ -9,4 +9,4 @@ numbers = input.split(",").map(&:to_i)
 sorted_numbers = numbers.sort
 
 # View of a sorted list
-puts "Posortowana lista: #{sorted_numbers.join(", ")}"
+puts "Sorted list: #{sorted_numbers.join(", ")}"
