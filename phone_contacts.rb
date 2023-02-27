@@ -1,3 +1,4 @@
+CONTACTS_FILE = "contacts.txt"
 # Define a Contact class to hold personal data
 class Contact
     attr_accessor :first_name, :last_name, :address, :phone_number
@@ -14,10 +15,37 @@ class Contact
     end
   end
   
+ 
+  def save_contacts(contacts)
+    File.open(CONTACTS_FILE, "w") do |file|
+      contacts.each do |contact|
+        file.puts("#{contact.first_name},#{contact.last_name},#{contact.address},#{contact.phone_number}\n")
+      end
+    end
+    puts "Contacts saved to #{CONTACTS_FILE}."
+  end
+  
+
+
+  def load_contacts
+    @contacts = []
+    if File.exist?(CONTACTS_FILE)
+      File.readlines(CONTACTS_FILE).each do |line|
+        first_name, last_name, address, phone_number = line.chomp.split(",")
+        @contacts << Contact.new(first_name, last_name, address, phone_number)
+      end
+      puts "Contacts loaded from #{CONTACTS_FILE}."
+    else
+      puts "#{CONTACTS_FILE} does not exist. Starting with an empty contact list."
+    end
+    @contacts
+  end
+  
+ 
   # Define a DataManagement class to manage contacts
   class DataManagement
     def initialize
-      @contacts = []
+      @contacts = load_contacts
     end
   
     def add_person
@@ -67,7 +95,7 @@ class Contact
   
     def run
       loop do
-        puts "\nSelect an option:\n1. Add person\n2. Delete person\n3. Sort people by\n4. Display people\n5. Quit"
+        puts "\nSelect an option:\n1. Add person\n2. Delete person\n3. Sort people by\n4. Display people\n5. Save contacts\n6. Load contacts\n7. Quit"
         choice = gets.chomp.to_i
         case choice
         when 1
@@ -79,6 +107,11 @@ class Contact
         when 4
           display_people
         when 5
+          save_contacts(@contacts)
+        when 6
+          load_contacts = @contacts
+        when 7
+          puts "Good bye!"
           break
         else
           puts "Invalid choice"
