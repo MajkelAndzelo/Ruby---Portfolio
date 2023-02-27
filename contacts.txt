@@ -1,3 +1,0 @@
-John,Wytrych,Los Angeles,28914791
-Some,Guy,New York,23565232
-Joseph,Smith,New Orlean,421412245
