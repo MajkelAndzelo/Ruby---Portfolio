@@ -1,3 +1,0 @@
-Go to sleep,5
-Eat something,2
-Go to the gym,4
