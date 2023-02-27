@@ -1,11 +1,29 @@
 require 'socket'
 
+class String
+    # colorization
+    def colorize(color_code)
+      "\e[#{color_code}m#{self}\e[0m"
+    end
+    def red
+        colorize(31)
+    end
+    def green
+        colorize(32)
+    end
+    def light_blue
+        colorize(36)
+    end
+end
+
+
 class TicTacToe
   WINNING_COMBINATIONS = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], # wiersze
     [0, 3, 6], [1, 4, 7], [2, 5, 8], # kolumny
     [0, 4, 8], [2, 4, 6] # przekątne
   ]
+
 
   def initialize
     @board = Array.new(9, ' ')
@@ -22,6 +40,11 @@ class TicTacToe
       clients << client
       puts "Client #{clients.length} connected"
       client.print "You are Player #{clients.length}\n\r"
+      if clients.length == 1
+        client.print "You are playing as X!\n\r"
+      else
+        client.print "You are playing as O!\n\r"
+      end
     end
 
     send_board_to_clients(clients)
@@ -38,17 +61,22 @@ class TicTacToe
         send_board_to_clients(clients)
 
         if winner?(@current_player)
-          client.print "Congratulations! You win!"
-          other_client.print "Player #{@current_player} wins!"
+          client.print "Congratulations! You win!".green
+          other_client.print "Player #{@current_player} wins!".green
+          other_client.print "You lost!".fg_color(:red)
+          print "[LOG] Player #{@current_player} wins!\n\r".green
           break
         elsif tie?
-          clients.each { |i| client.puts 'Tie game.' }
+          client.print "It's a tie!\n\r".light_blue
+          other_client.print "It's a tie!\n\r".light_blue
           break
         end
 
         @current_player = @current_player == 'X' ? 'O' : 'X'
       else
-        client.print "Invalid move. Try again.\n\r"
+        client.print "Invalid move. Try again.\n\r".red
+        print "[LOG] Player #{@current_player} chosen invalid move.\n\r".red
+
       end
     end
 
@@ -66,10 +94,9 @@ class TicTacToe
   def get_move(client)
     client.print "Make your move (1-9): "
     move = client.gets.chomp.to_i - 1
+    print "[LOG] Player #{@current_player} chose move #{move + 1}\n\r"
     #obsługa typowych błędów
     raise ArgumentError, 'Invalid move. Enter a number between 0 and 8.' unless (0..8).include?(move)
-    raise ArgumentError, 'Invalid move. That position is already taken.' unless @board[move] == ' ' || @board[move] == 'X' || @board[move] == 'O'
-
     move
   end
 
