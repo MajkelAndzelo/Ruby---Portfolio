@@ -14,8 +14,11 @@ class String
     def light_blue
         colorize(36)
     end
+    def yellow
+        colorize(33)
+    end
 end
-
+    LOG = "[LOG]".yellow
 
 class TicTacToe
   WINNING_COMBINATIONS = [
@@ -62,20 +65,21 @@ class TicTacToe
 
         if winner?(@current_player)
           client.print "Congratulations! You win!".green
-          other_client.print "Player #{@current_player} wins!".green
-          other_client.print "You lost!".fg_color(:red)
-          print "[LOG] Player #{@current_player} wins!\n\r".green
+          other_client.print "You lost! ".red +  "Player #{@current_player} wins!".green
+          print "#{LOG} Player #{@current_player} wins!\n\r".green
           break
         elsif tie?
           client.print "It's a tie!\n\r".light_blue
           other_client.print "It's a tie!\n\r".light_blue
+          print "#{LOG} It's a tie!\n\r"
+
           break
         end
 
         @current_player = @current_player == 'X' ? 'O' : 'X'
       else
         client.print "Invalid move. Try again.\n\r".red
-        print "[LOG] Player #{@current_player} chosen invalid move.\n\r".red
+        print "#{LOG} Player #{@current_player} chosen invalid move.\n\r"
 
       end
     end
@@ -94,7 +98,7 @@ class TicTacToe
   def get_move(client)
     client.print "Make your move (1-9): "
     move = client.gets.chomp.to_i - 1
-    print "[LOG] Player #{@current_player} chose move #{move + 1}\n\r"
+    print "#{LOG} Player #{@current_player} chose move #{move + 1}\n\r"
     #obsługa typowych błędów
     raise ArgumentError, 'Invalid move. Enter a number between 0 and 8.' unless (0..8).include?(move)
     move
