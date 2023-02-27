@@ -17,6 +17,9 @@ class String
     def yellow
         colorize(33)
     end
+    def gray
+        colorize(37)
+    end
 end
     LOG = "[LOG]".yellow
 
@@ -41,7 +44,7 @@ class TicTacToe
     2.times do
       client = server.accept
       clients << client
-      puts "Client #{clients.length} connected"
+      puts "Client #{clients.length} " + "connected".green
       client.print "You are Player #{clients.length}\n\r"
       if clients.length == 1
         client.print "You are playing as X!\n\r"
@@ -61,7 +64,10 @@ class TicTacToe
 
       if valid_move?(move)
         @board[move] = @current_player
+        other_client.print "Player #{@current_player} chosen #{move + 1}\n\r".yellow
         send_board_to_clients(clients)
+        client.print "You have chosen position #{move + 1}\n\n\r".gray
+        
 
         if winner?(@current_player)
           client.print "Congratulations! You win!".green
@@ -129,8 +135,7 @@ class TicTacToe
     "---+---+---\n\r" +
     " #{@board[3]} | #{@board[4]} | #{@board[5]}\n\r" +
     "---+---+---\n\r" +
-    " #{@board[6]} | #{@board[7]} | #{@board[8]}\n\r" +
-    "\n\r"
+    " #{@board[6]} | #{@board[7]} | #{@board[8]}\n\r"
   end
   
 
