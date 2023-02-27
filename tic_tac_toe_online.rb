@@ -21,7 +21,7 @@ class TicTacToe
       client = server.accept
       clients << client
       puts "Client #{clients.length} connected"
-      client.print "You are Player #{clients.length}\n"
+      client.print "You are Player #{clients.length}\n\r"
     end
 
     send_board_to_clients(clients)
@@ -48,7 +48,7 @@ class TicTacToe
 
         @current_player = @current_player == 'X' ? 'O' : 'X'
       else
-        client.print 'Invalid move. Try again.'
+        client.print "Invalid move. Try again.\n\r"
       end
     end
 
@@ -64,11 +64,12 @@ class TicTacToe
   private
 
   def get_move(client)
-    client.print "Make your move (0-8): "
-    move = client.gets.chomp.to_i
+    client.print "Make your move (1-9): "
+    move = client.gets.chomp.to_i - 1
     #obsługa typowych błędów
     raise ArgumentError, 'Invalid move. Enter a number between 0 and 8.' unless (0..8).include?(move)
-    raise ArgumentError, 'Invalid move. That position is already taken.' unless @board[move] == ' '
+    raise ArgumentError, 'Invalid move. That position is already taken.' unless @board[move] == ' ' || @board[move] == 'X' || @board[move] == 'O'
+
     move
   end
 
@@ -87,18 +88,18 @@ class TicTacToe
   def send_board_to_clients(clients)
     board_string = board_to_string
     clients.each do |client|
-      client.print board_string
+      client.puts board_string
     end
   end
   
 
   def board_to_string 
-    "#{@board[0]}|#{@board[1]}|#{@board[2]}\n" +
-    "---+---+---\n" +
-    "#{@board[3]}|#{@board[4]}|#{@board[5]}\n" +
-    "---+---+---\n" +
-    "#{@board[6]}|#{@board[7]}|#{@board[8]}\n" +
-    "\n"
+    " #{@board[0]} | #{@board[1]} | #{@board[2]}\n\r" +
+    "---+---+---\n\r" +
+    " #{@board[3]} | #{@board[4]} | #{@board[5]}\n\r" +
+    "---+---+---\n\r" +
+    " #{@board[6]} | #{@board[7]} | #{@board[8]}\n\r" +
+    "\n\r"
   end
   
 
